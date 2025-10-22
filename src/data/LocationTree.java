@@ -60,7 +60,7 @@ public class LocationTree {
     }
 
     public void displayInOrder() {
-        System.out.println("\n--- All Locations (In-order) ---");
+        System.out.println("\n--- All Locations ---");
         inOrder(root);
         System.out.println();
     }
