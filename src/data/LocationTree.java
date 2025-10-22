@@ -3,6 +3,7 @@ package data;
 public class LocationTree {
     private AVLNode root;
 
+    /*Height helper for AVL operations.*/
     private int height(AVLNode node) {
         return node == null ? 0 : node.height;
     }
@@ -55,12 +56,20 @@ public class LocationTree {
         return node;
     }
 
+    /*Public insert with basic validationPublic insert with basic validation.*/
     public void insert(String key) {
-        root = insert(root, key);
+        if (key == null) return;
+        String k = key.trim();
+        if (k.isEmpty()) return;
+        root = insert(root, k);
     }
 
     public void displayInOrder() {
         System.out.println("\n--- All Locations ---");
+        if (root == null) {
+            System.out.println("No locations added yet.");
+            return;
+        }
         inOrder(root);
         System.out.println();
     }
@@ -71,5 +80,94 @@ public class LocationTree {
             System.out.print(node.key + " ");
             inOrder(node.right);
         }
+    }
+
+
+    public boolean isEmpty() {
+        return root == null;
+    }
+
+
+    /*Remove a key from the tree if it exists.*/
+    public boolean remove(String key) {
+        if (key == null) return false;
+        String k = key.trim();
+        if (k.isEmpty()) return false;
+        boolean existed = contains(root, k);
+        root = deleteNode(root, k);
+        return existed;
+    }
+
+    /*Check if the tree contains a key.*/
+    public boolean contains(String key) {
+        if (key == null) return false;
+        String k = key.trim();
+        if (k.isEmpty()) return false;
+        return contains(root, k);
+    }
+
+    private boolean contains(AVLNode node, String key) {
+        if (node == null) return false;
+        int cmp = key.compareTo(node.key);
+        if (cmp == 0) return true;
+        if (cmp < 0) return contains(node.left, key);
+        return contains(node.right, key);
+    }
+
+    private AVLNode deleteNode(AVLNode node, String key) {
+        if (node == null) return null;
+
+        int cmp = key.compareTo(node.key);
+        if (cmp < 0) {
+            node.left = deleteNode(node.left, key);
+        } else if (cmp > 0) {
+            node.right = deleteNode(node.right, key);
+        } else {
+            // node to be deleted
+            if (node.left == null || node.right == null) {
+                node = (node.left != null) ? node.left : node.right;
+            } else {
+                // Two children: get inorder successor
+                AVLNode successor = minValueNode(node.right);
+                node.key = successor.key;
+                node.right = deleteNode(node.right, successor.key);
+            }
+        }
+
+        if (node == null) return null;
+
+        // Update height
+        node.height = 1 + Math.max(height(node.left), height(node.right));
+
+        // Rebalance
+        int balance = getBalance(node);
+
+        // Left heavy
+        if (balance > 1) {
+            if (getBalance(node.left) >= 0) {
+                return rotateRight(node); // LL
+            } else {
+                node.left = rotateLeft(node.left); // LR
+                return rotateRight(node);
+            }
+        }
+
+        // Right heavy
+        if (balance < -1) {
+            if (getBalance(node.right) <= 0) {
+                return rotateLeft(node); // RR
+            } else {
+                node.right = rotateRight(node.right); // RL
+                return rotateLeft(node);
+            }
+        }
+
+        return node;
+    }
+
+    private AVLNode minValueNode(AVLNode node) {
+        AVLNode current = node;
+        while (current.left != null) current = current.left;
+        return current;
     }
 }
