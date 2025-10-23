@@ -36,7 +36,7 @@ public class Menu {
 
             // Validate input
             while (!sc.hasNextInt()) {
-                System.out.println("Invalid input! Enter a number between 0 and 7:");
+                System.out.print("Invalid input! Enter a number between 0 and 7:");
                 sc.next();
             }
             choice = sc.nextInt();
@@ -52,7 +52,11 @@ public class Menu {
                 case 2:
                     System.out.print("Enter location name to remove: ");
                     String rem = sc.nextLine();
-                    graph.removeLocation(rem);
+                    boolean removedFromGraph = graph.removeLocation(rem);
+                    // Keep the tree in sync with the graph so the Tree view reflects removals
+                    if (removedFromGraph) {
+                        tree.remove(rem);
+                    }
                     break;
                 case 3:
                     System.out.print("Enter starting location: ");

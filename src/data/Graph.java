@@ -20,15 +20,22 @@ public class Graph {
     }
 
     // Remove a location
-    public void removeLocation(String location) {
-        if (adjacencyList.containsKey(location)) {
-            adjacencyList.remove(location);
+    public boolean removeLocation(String location) {
+        String loc = safeName(location);
+        if (loc.isEmpty()) {
+            System.out.println("Invalid location name.");
+            return false;
+        }
+        if (adjacencyList.containsKey(loc)) {
+            adjacencyList.remove(loc);
             for (List<String> list : adjacencyList.values()) {
-                list.remove(location);
+                list.remove(loc);
             }
-            System.out.println("Location removed: " + location);
+            System.out.println("Location removed: " + loc);
+            return true;
         } else {
             System.out.println("Location not found!");
+            return false;
         }
     }
 
@@ -57,8 +64,17 @@ public class Graph {
     // Display all connections
     public void displayConnections() {
         System.out.println("\n--- City Connections ---");
-        for (String location : adjacencyList.keySet()) {
-            System.out.println(location + " -> " + adjacencyList.get(location));
+        if (adjacencyList.isEmpty()) {
+            System.out.println("No locations added yet.");
+            return;
+        }
+        // Sort locations for stable display order
+        List<String> locations = new ArrayList<>(adjacencyList.keySet());
+        Collections.sort(locations);
+        for (String location : locations) {
+            List<String> neighbors = new ArrayList<>(adjacencyList.get(location));
+            Collections.sort(neighbors);
+            System.out.println(location + " -> " + neighbors);
         }
     }
 
@@ -85,5 +101,9 @@ public class Graph {
             }
         }
         System.out.println();
+    }
+
+    private String safeName(String name) {
+        return name == null ? "" : name.trim();
     }
 }
