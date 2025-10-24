@@ -1,4 +1,4 @@
-## Smart City Route Planner
+# Smart City Route Planner
 
 A simple console-based application to manage city locations and roads, and to explore connectivity using Breadth-First Search (BFS). The project demonstrates core data structures (undirected graph and AVL tree) with robust, user-friendly input validation and clear error handling.
 
@@ -40,6 +40,11 @@ java -version
 javac -version
 ```
 
+## Installation
+```bash
+git clone https://github.com/nilupul-madhusanka/smart-city-route-planner
+
+```
 ## Using the app
 
 Menu options:
@@ -49,7 +54,7 @@ Menu options:
 	- Prevents duplicates.
 
 2) Remove a location
-	- Confirms before deleting and removes all incident roads.
+	- When deleting it, remove all incident roads.
 	- Notifies if the location doesn’t exist.
 
 3) Add a road between locations
@@ -90,7 +95,7 @@ Example flow:
 
 - AVL tree: `LocationTree`
   - Used for sorted display of location names; public `insert` safely ignores blank input.
-  - `displayInOrder` handles empty tree gracefully.
+  - `displayInOrder` handles an empty tree gracefully.
 
 - Menu: `Menu.java`
   - Centralized input helpers: integer range, non-empty strings, and yes/no confirmation.
